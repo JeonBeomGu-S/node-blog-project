@@ -1,0 +1,109 @@
+/api/likes:
+  get:
+    tags:
+      - Like
+    summary: Retrieve posts user liked
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 200,
+              "errCode": "0",
+              "errMsg": "Success",
+              "likedPostList":[{
+                "id": 1,
+                "title": "title 1",
+                "content": "Lorem ipusm...", # max length is 50 chars
+                "categoryName": "travel",
+                "userName": "Beomgu Jeon",
+                "visitCount": 10,
+                "createDate": "2024-07-28 13:12:33"
+              }, {
+                "id": 2,
+                "title": "title 2",
+                "content": "Lorem ipusm...", # max length is 50 chars
+                "categoryName": "travel",
+                "userName": "Beomgu Jeon",
+                "visitCount": 5,
+                "createDate": "2024-07-29 15:52:13"
+              }]
+            }
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "LIKE001",
+              "errMsg": "Failed to retrieve liked posts."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "LIKE002",
+              "errMsg": "Failed to retrieve liked posts."
+            }
+
+/api/likes/{id}:
+  post:
+    tags:
+      - Like
+    summary: Like the post or comment
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: post or comment id
+        schema:
+          type: int
+      - in: query
+        name: type
+        required: true
+        description: post or comment
+        schema:
+          type: string
+    responses:
+      '200':
+        $ref: './openapi.yaml#/components/responses/SuccessResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "LIKE003",
+              "errMsg": "Failed to like the post or comment."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 404,
+              "errCode": "LIKE004",
+              "errMsg": "The post or comment does not exist."
+            }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "LIKE005",
+              "errMsg": "Failed to like the post or comment."
+            }

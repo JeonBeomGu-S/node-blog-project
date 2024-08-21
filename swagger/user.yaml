@@ -1,0 +1,144 @@
+/api/signup:
+  post:
+    tags:
+      - User
+    summary: A user signs up
+    consumes:
+      - application/json
+    requestBody:
+      x-name: body
+      required: true
+      content:
+        application/json:
+          type: object
+          example: {
+            "email": "bgjeon@myseneca.ca",
+            "password": "abc123", # to be encrypted in the server
+            "passwordConfirm": "abc123",
+            "name": "Beomgu Jeon",
+            # to be implemented
+            "profileImage": {
+              "fieldname": "myFiles",
+              "originalname": "_.png",
+              "encoding": "7bit",
+              "mimetype": "image/png",
+              "destination": "/Users/x/Documents/dev/node_playground/test/files",
+              "filename": "fea8f281-f412-43b3-b349-b865d10ca634.png",
+              "path": "/Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png",
+              "size": 74107	
+            }
+          }
+    responses:
+      '302':
+        $ref: './openapi.yaml#/components/responses/RedirectResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "SIGNUP001",
+              "errMsg": "Data format is invalid. Please check the data"	
+            }
+      '412': 
+        description: Precondition Failed
+        content:
+          application/json:
+            type: object
+            examples: 
+              duplicatedEmail: 
+                value: {
+                  "status": 412,
+                  "errCode": "SIGNUP002",
+                  "errMsg": "Email is duplicated. Please use another email address."
+                }
+              passwordIsNotMatched: 
+                value: {
+                  "status": 412,
+                  "errCode": "SIGNUP003",
+                  "errMsg": "Password confirm is not matched."
+                }
+              invalidEmail: 
+                value: {
+                  "status": 412,
+                  "errCode": "SIGNUP004",
+                  "errMsg": "Email format is not matched."
+                }
+              invalidPassword: 
+                value: {
+                  "status": 412,
+                  "errCode": "SIGNUP005",
+                  "errMsg": "Password format is not matched."
+                }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "SIGNUP006",
+              "errMsg": "Singup is failed. The server occured internal error."
+            }
+/api/login:
+  post:
+    tags:
+      - User
+    summary: A user login
+    consumes: 
+      - application/json
+    requestBody:
+      x-name: body
+      required: true
+      content:
+        application/json:
+          type: object
+          example: {
+            "email": "bgjeon@myseneca.ca",
+            "password": "qwe123!"
+          }
+    responses:
+      '302':
+        description: Redirect to another page
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 302,
+              "errCode": "0",
+              "errMsg": "Success",
+              "token": "ehJhbGciO....."
+            }
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "LOGIN001",
+              "errMsg": "Login is failed."
+            }
+      '412': 
+        description: Precondition Failed
+        content:
+          application/json:
+            type: object
+            examples: 
+              IdAndPasswordIsNotMatched: 
+                value: {
+                  "status": 412,
+                  "errCode": "LOGIN002",
+                  "errMsg": "Please check id and password."
+                }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "LOGIN003",
+              "errMsg": "Login is failed."
+            }

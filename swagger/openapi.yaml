@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Blog API docs
+  description: Blog Project by Node.js
+  license:
+    name: Beomgu Jeon
+servers:
+  - url: http://localhost:3000/
+components:
+  parameters: null
+  # Schemas
+  schemas:
+    user:
+      properties:
+        id:
+          type: number
+          description: user id
+        email:
+          type: string
+          description: user email
+        password:
+          type: string
+          description: user password
+        name:
+          type: string
+          description: user name
+        createDate:
+          type: date
+          description: user created date
+        updateDate:
+          type: date
+          description: user updated date
+        profileImage:
+          type: string
+          description: user profile image path
+    post:
+      properties:
+        id:
+          type: int
+          description: post id
+        title:
+          type: string
+          description: post title
+        content:
+          type: text
+          description: post content
+        categoryId:
+          type: int
+          description: post category id
+        userId:
+          type: int
+          description: post user id
+        visitCount:
+          type: int
+          description: post visit count
+        createDate:
+          type: date
+          description: post created date
+        updateDate:
+          type: date
+          description: post updated date
+
+    category:
+      properties:
+        id:
+          type: int
+          description: category id
+        name:
+          type: string
+          description: category name
+        createDate:
+          type: date
+          description: category created date
+        updateDate:
+          type: date
+          description: category updated date
+
+    comment:
+      properties:
+        id:
+          type: int
+          description: comment id
+        content:
+          type: text
+          description: comment content
+        postId:
+          type: int
+          description: commneted post id
+        userId:
+          type: int
+          description: commented user id
+        parentId:
+          type: int
+          description: parent id if comment is reply for another one
+        createDate:
+          type: date
+          description: comment created date
+        updateDate:
+          type: date
+          description: comment updated date
+
+    like:
+      properties:
+        id:
+          type: int
+          description: like id
+        postId:
+          type: int
+          description: liked post id
+        commentId:
+          type: int
+          description: liked commente id
+        userId:
+          type: int
+          description: liked user id
+        createDate:
+          type: date
+          description: like created date
+
+    file:
+      properties:
+        id:
+          type: int
+          description: file id
+        name:
+          type: string
+          description: file name
+        path:
+          type: string
+          description: file path
+        postId:
+          type: int
+          description: related post id
+
+    error:
+      type: object
+      properties:
+        status:
+          type: int
+        errCode:
+          type: string
+        errMsg:
+          type: string
+        
+  # Examples
+  examples:
+    userExample:
+      value:
+        {
+          "id": 1,
+          "email": "bgjeon@myseneca.ca",
+          "password": "qwe123!",
+          "name": "Daniel",
+          "createDate": "2024-07-28 13:12:33",
+          "updateDate": "2024-07-28 13:12:33",
+          "profileImage": "/Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png"
+        }
+    postExample:
+      value: 
+        {
+          "id": 1,
+          "title": "Post Title",
+          "content": "This is post content",
+          "categoryId": 1,
+          "userId": 1,
+          "visitCount": 12,
+          "createDate": "2024-07-28 13:12:33",
+          "updateDate": "2024-07-28 13:12:33"
+        } 
+    categoryExample:
+      value:
+        {
+          "id": 1,
+          "name": "travel",
+          "createDate": "2024-07-28 13:12:33",
+          "updateDate": "2024-07-28 13:12:33"
+        }
+    commentExample:
+      value:
+        {
+          "id": 2,
+          "content": "This is comment",
+          "postId": 1,
+          "userId": 1,
+          "parentId": 1,
+          "createDate": "2024-07-28 13:12:33",
+          "updateDate": "2024-07-28 13:12:33"
+        }
+    likeExample:
+      value:
+        {
+          "id": 1,
+          "postId": 1,
+          "userId": 1,
+          "createDate": "2024-07-28 13:12:33"
+        }
+    fileExample:
+      value:
+        {
+          "id": 1,
+          "name": "test.png",
+          "path": "/Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png",
+          "postId": 1
+        }
+  # Responses
+  responses:
+    SuccessResponse:
+        description: The request is successful
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/error"
+            example: { "status": 200, "errCode": "0", "errMsg": "Success" }
+    RedirectResponse:
+      description: Redirect to another page
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/error"
+          example: { "status": 302, "errCode": "0", "errMsg": "Success" }
+    BadRequest:
+      description: Send an invalid request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/error"
+          example: { "status": 400, "errCode": "SIGNUP001", "errMsg": "Data format is invalid. Please check the data" }
+    Unauthorized:
+      description: Send request with unauthorized token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/error"
+          example: { "status": 401, "errCode": "AUTH001", "errMsg": "The session is invalid." }
+    PreconditionFailed:
+      description: Send request with unexpected values
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/error"
+          example: { "status": 412, "errCode": "SIGNUP002", "errMsg": "Email is duplicated. Please use another email address."}
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/error"
+          example: { "status": 500, "errCode": "SIGNUP006", "errMsg": "Singup is failed. The server occured internal error." }
+
+# api path
+paths:
+  /api/signup:
+    $ref: './user.yaml#/~1api~1signup'
+  /api/login:
+    $ref: './user.yaml#/~1api~1login'
+  /api/posts:
+    $ref: './post.yaml#/~1api~1posts'
+  /api/posts/{postId}:
+    $ref: './post.yaml#/~1api~1posts~1{postId}'
+  /api/comments/{postId}:
+    $ref: './comment.yaml#/~1api~1comments~1{postId}'
+  /api/comments/{commentId}:
+    $ref: './comment.yaml#/~1api~1comments~1{commentId}'
+  /api/likes:
+    $ref: './like.yaml#/~1api~1likes'
+  /api/likes/{id}:
+    $ref: './like.yaml#/~1api~1likes~1{id}'
+  

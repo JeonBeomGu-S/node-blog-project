@@ -1,0 +1,323 @@
+/api/posts:
+  post:
+    tags:
+      - Post
+    summary: Create a post
+    consumes: 
+      - application/json
+    requestBody:
+      x-name: body
+      required: true
+      content:
+        application/json:
+          type: object
+          example: {
+            "title": "This is title",
+            "content": "contents~~~",
+            "categoryId": 1,
+            "fileList": [{
+              "fieldname": "myFiles1",
+              "originalname": "1.png",
+              "encoding": "7bit",
+              "mimetype": "image/png",
+              "destination": "/Users/x/Documents/dev/node_playground/test/files",
+              "filename": "fea8f281-f412-43b3-b349-b865d10ca634.png",
+              "path": "/Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png",
+              "size": 74107	
+            }, {
+              "fieldname": "myFiles2",
+              "originalname": "2.png",
+              "encoding": "7bit",
+              "mimetype": "image/png",
+              "destination": "/Users/x/Documents/dev/node_playground/test/files",
+              "filename": "qwe2f281-f412-43b3-b349-b865d10ca634.png",
+              "path": "/Users/x/Documents/dev/node_playground/test/files/qwe2f281-f412-43b3-b349-b865d10ca634.png",
+              "size": 13513	
+            }]
+          }
+    responses:
+      '302':
+        $ref: './openapi.yaml#/components/responses/RedirectResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "POST001",
+              "errMsg": "Failed to create post."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '412': 
+        description: Precondition Failed
+        content:
+          application/json:
+            type: object
+            examples: 
+              InvalidData: 
+                value: {
+                  "status": 412,
+                  "errCode": "POST002",
+                  "errMsg": "The data format is invalid."
+                } 
+              InvalidTitle: 
+                value: {
+                  "status": 412,
+                  "errCode": "POST003",
+                  "errMsg": "The title format is not mathced."
+                }
+              InvalidContent: 
+                value: {
+                  "status": 412,
+                  "errCode": "POST004",
+                  "errMsg": "The content format is not matched."
+                }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "POST005",
+              "errMsg": "Failed to create post."
+            }
+  get:
+    tags:
+      - Post
+    summary: Retrieve post list
+    parameters:
+      - in: query
+        name: page
+        required: true
+        description: page number
+        schema:
+          type: int
+      - in: query
+        name: pageSize
+        required: false
+        description: page size
+        schema:
+          type: int
+      - in: query
+        name: sortBy
+        required: false
+        description: sorting by
+        schema:
+          type: string
+      - in: query
+        name: sortOrder
+        required: false
+        description: sort order (asc/desc)
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 200,
+              "errCode": "0",
+              "errMsg": "Success",
+              "postList":[{
+                "id": 1,
+                "title": "title 1",
+                "content": "Lorem ipusm...", # max length is 50 chars
+                "categoryName": "travel",
+                "userName": "Beomgu Jeon",
+                "visitCount": 10,
+                "createDate": "2024-07-28 13:12:33"
+              }, {
+                "id": 2,
+                "title": "title 2",
+                "content": "Lorem ipusm...", # max length is 50 chars
+                "categoryName": "travel",
+                "userName": "Beomgu Jeon",
+                "visitCount": 5,
+                "createDate": "2024-07-29 15:52:13"
+              }]
+            }
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "POST006",
+              "errMsg": "Failed to retrieve posts."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "POST007",
+              "errMsg": "Failed to retrieve posts."
+            }
+/api/posts/{postId}:
+  get:
+    tags:
+      - Post
+    summary: View selected post and increase the visit count
+    parameters:
+      - in: path
+        name: postId
+        required: true
+        description: post id
+        schema:
+          type: int
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            type: object
+            example: {
+              	"status": 200,
+                "errCode": "0",
+                "errMsg": "Success",
+                "id": "1",
+                "title": "title 1",
+                "content": "Lorem ipusm fdasf",
+                "categoryName": "travel",
+                "userName": "Beomgu Jeon",
+                "visitCount": 10,
+                "createDate": "2024-07-28 13:12:33",
+                "updateDate": "2024-07-28 13:12:33"
+            }
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "POST008",
+              "errMsg": "Failed to retrieve the post."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "POST009",
+              "errMsg": "Failed to retrieve the post."
+            }
+  put:
+    tags:
+      - Post
+    summary: Update the post
+    parameters:
+      - in: path
+        name: postId
+        required: true
+        description: post id
+        schema:
+          type: int
+    consumes: 
+      - application/json
+    requestBody:
+      x-name: body
+      required: true
+      content:
+        application/json:
+          type: object
+          example: {
+            "title": "This is updated title",
+            "content": "content is updated~~~",
+            "categoryId": 1,
+            "fileList": [{
+              "fieldname": "myFiles1",
+              "originalname": "1.png",
+              "encoding": "7bit",
+              "mimetype": "image/png",
+              "destination": "/Users/x/Documents/dev/node_playground/test/files",
+              "filename": "fea8f281-f412-43b3-b349-b865d10ca634.png",
+              "path": "/Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png",
+              "size": 74107	
+            }]
+          }
+    responses:
+      '302':
+        $ref: './openapi.yaml#/components/responses/RedirectResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "POST008",
+              "errMsg": "Failed to retrieve the post."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "POST009",
+              "errMsg": "Failed to retrieve the post."
+            }
+  delete:
+    tags:
+      - Post
+    summary: Delete the post
+    parameters:
+      - in: path
+        name: postId
+        required: true
+        description: post id
+        schema:
+          type: int
+    responses:
+      '302':
+        $ref: './openapi.yaml#/components/responses/RedirectResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "POST012",
+              "errMsg": "Failed to delete the post."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 404,
+              "errCode": "POST013",
+              "errMsg": "The post does not exist."
+            }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "POST011",
+              "errMsg": "Failed to delete the post."
+            }

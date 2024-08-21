@@ -1,0 +1,26 @@
+{
+  "name": "blog-project",
+  "version": "1.0.0",
+  "description": "This is toy project by using node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "api-docs": "swagger-cli bundle ./swagger/openapi.yaml --outfile build/swagger.yaml --type yaml",
+    "predev": "npm run api-docs",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Beomgu Jeon",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/swagger-ui-express": "^4.1.6",
+    "@types/yamljs": "^0.2.34",
+    "swagger-cli": "^4.0.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
+  }
+}

@@ -1,0 +1,989 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Blog API docs
+  description: Blog Project by Node.js
+  license:
+    name: Beomgu Jeon
+servers:
+  - url: 'http://localhost:3000/'
+components:
+  parameters: null
+  schemas:
+    user:
+      properties:
+        id:
+          type: number
+          description: user id
+        email:
+          type: string
+          description: user email
+        password:
+          type: string
+          description: user password
+        name:
+          type: string
+          description: user name
+        createDate:
+          type: date
+          description: user created date
+        updateDate:
+          type: date
+          description: user updated date
+        profileImage:
+          type: string
+          description: user profile image path
+    post:
+      properties:
+        id:
+          type: int
+          description: post id
+        title:
+          type: string
+          description: post title
+        content:
+          type: text
+          description: post content
+        categoryId:
+          type: int
+          description: post category id
+        userId:
+          type: int
+          description: post user id
+        visitCount:
+          type: int
+          description: post visit count
+        createDate:
+          type: date
+          description: post created date
+        updateDate:
+          type: date
+          description: post updated date
+    category:
+      properties:
+        id:
+          type: int
+          description: category id
+        name:
+          type: string
+          description: category name
+        createDate:
+          type: date
+          description: category created date
+        updateDate:
+          type: date
+          description: category updated date
+    comment:
+      properties:
+        id:
+          type: int
+          description: comment id
+        content:
+          type: text
+          description: comment content
+        postId:
+          type: int
+          description: commneted post id
+        userId:
+          type: int
+          description: commented user id
+        parentId:
+          type: int
+          description: parent id if comment is reply for another one
+        createDate:
+          type: date
+          description: comment created date
+        updateDate:
+          type: date
+          description: comment updated date
+    like:
+      properties:
+        id:
+          type: int
+          description: like id
+        postId:
+          type: int
+          description: liked post id
+        commentId:
+          type: int
+          description: liked commente id
+        userId:
+          type: int
+          description: liked user id
+        createDate:
+          type: date
+          description: like created date
+    file:
+      properties:
+        id:
+          type: int
+          description: file id
+        name:
+          type: string
+          description: file name
+        path:
+          type: string
+          description: file path
+        postId:
+          type: int
+          description: related post id
+    error:
+      type: object
+      properties:
+        status:
+          type: int
+        errCode:
+          type: string
+        errMsg:
+          type: string
+  examples:
+    userExample:
+      value:
+        id: 1
+        email: bgjeon@myseneca.ca
+        password: qwe123!
+        name: Daniel
+        createDate: '2024-07-28 13:12:33'
+        updateDate: '2024-07-28 13:12:33'
+        profileImage: /Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png
+    postExample:
+      value:
+        id: 1
+        title: Post Title
+        content: This is post content
+        categoryId: 1
+        userId: 1
+        visitCount: 12
+        createDate: '2024-07-28 13:12:33'
+        updateDate: '2024-07-28 13:12:33'
+    categoryExample:
+      value:
+        id: 1
+        name: travel
+        createDate: '2024-07-28 13:12:33'
+        updateDate: '2024-07-28 13:12:33'
+    commentExample:
+      value:
+        id: 2
+        content: This is comment
+        postId: 1
+        userId: 1
+        parentId: 1
+        createDate: '2024-07-28 13:12:33'
+        updateDate: '2024-07-28 13:12:33'
+    likeExample:
+      value:
+        id: 1
+        postId: 1
+        userId: 1
+        createDate: '2024-07-28 13:12:33'
+    fileExample:
+      value:
+        id: 1
+        name: test.png
+        path: /Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png
+        postId: 1
+  responses:
+    SuccessResponse:
+      description: The request is successful
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            status: 200
+            errCode: '0'
+            errMsg: Success
+    RedirectResponse:
+      description: Redirect to another page
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            status: 302
+            errCode: '0'
+            errMsg: Success
+    BadRequest:
+      description: Send an invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            status: 400
+            errCode: SIGNUP001
+            errMsg: Data format is invalid. Please check the data
+    Unauthorized:
+      description: Send request with unauthorized token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            status: 401
+            errCode: AUTH001
+            errMsg: The session is invalid.
+    PreconditionFailed:
+      description: Send request with unexpected values
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            status: 412
+            errCode: SIGNUP002
+            errMsg: Email is duplicated. Please use another email address.
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+          example:
+            status: 500
+            errCode: SIGNUP006
+            errMsg: Singup is failed. The server occured internal error.
+paths:
+  /api/signup:
+    post:
+      tags:
+        - User
+      summary: A user signs up
+      consumes:
+        - application/json
+      requestBody:
+        x-name: body
+        required: true
+        content:
+          application/json:
+            type: object
+            example:
+              email: bgjeon@myseneca.ca
+              password: abc123
+              passwordConfirm: abc123
+              name: Beomgu Jeon
+              profileImage:
+                fieldname: myFiles
+                originalname: _.png
+                encoding: 7bit
+                mimetype: image/png
+                destination: /Users/x/Documents/dev/node_playground/test/files
+                filename: fea8f281-f412-43b3-b349-b865d10ca634.png
+                path: /Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png
+                size: 74107
+      responses:
+        '302':
+          $ref: '#/components/responses/RedirectResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: SIGNUP001
+                errMsg: Data format is invalid. Please check the data
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              type: object
+              examples:
+                duplicatedEmail:
+                  value:
+                    status: 412
+                    errCode: SIGNUP002
+                    errMsg: Email is duplicated. Please use another email address.
+                passwordIsNotMatched:
+                  value:
+                    status: 412
+                    errCode: SIGNUP003
+                    errMsg: Password confirm is not matched.
+                invalidEmail:
+                  value:
+                    status: 412
+                    errCode: SIGNUP004
+                    errMsg: Email format is not matched.
+                invalidPassword:
+                  value:
+                    status: 412
+                    errCode: SIGNUP005
+                    errMsg: Password format is not matched.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: SIGNUP006
+                errMsg: Singup is failed. The server occured internal error.
+  /api/login:
+    post:
+      tags:
+        - User
+      summary: A user login
+      consumes:
+        - application/json
+      requestBody:
+        x-name: body
+        required: true
+        content:
+          application/json:
+            type: object
+            example:
+              email: bgjeon@myseneca.ca
+              password: qwe123!
+      responses:
+        '302':
+          description: Redirect to another page
+          content:
+            application/json:
+              type: object
+              example:
+                status: 302
+                errCode: '0'
+                errMsg: Success
+                token: ehJhbGciO.....
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: LOGIN001
+                errMsg: Login is failed.
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              type: object
+              examples:
+                IdAndPasswordIsNotMatched:
+                  value:
+                    status: 412
+                    errCode: LOGIN002
+                    errMsg: Please check id and password.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: LOGIN003
+                errMsg: Login is failed.
+  /api/posts:
+    post:
+      tags:
+        - Post
+      summary: Create a post
+      consumes:
+        - application/json
+      requestBody:
+        x-name: body
+        required: true
+        content:
+          application/json:
+            type: object
+            example:
+              title: This is title
+              content: contents~~~
+              categoryId: 1
+              fileList:
+                - fieldname: myFiles1
+                  originalname: 1.png
+                  encoding: 7bit
+                  mimetype: image/png
+                  destination: /Users/x/Documents/dev/node_playground/test/files
+                  filename: fea8f281-f412-43b3-b349-b865d10ca634.png
+                  path: /Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png
+                  size: 74107
+                - fieldname: myFiles2
+                  originalname: 2.png
+                  encoding: 7bit
+                  mimetype: image/png
+                  destination: /Users/x/Documents/dev/node_playground/test/files
+                  filename: qwe2f281-f412-43b3-b349-b865d10ca634.png
+                  path: /Users/x/Documents/dev/node_playground/test/files/qwe2f281-f412-43b3-b349-b865d10ca634.png
+                  size: 13513
+      responses:
+        '302':
+          $ref: '#/components/responses/RedirectResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: POST001
+                errMsg: Failed to create post.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              type: object
+              examples:
+                InvalidData:
+                  value:
+                    status: 412
+                    errCode: POST002
+                    errMsg: The data format is invalid.
+                InvalidTitle:
+                  value:
+                    status: 412
+                    errCode: POST003
+                    errMsg: The title format is not mathced.
+                InvalidContent:
+                  value:
+                    status: 412
+                    errCode: POST004
+                    errMsg: The content format is not matched.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: POST005
+                errMsg: Failed to create post.
+    get:
+      tags:
+        - Post
+      summary: Retrieve post list
+      parameters:
+        - in: query
+          name: page
+          required: true
+          description: page number
+          schema:
+            type: int
+        - in: query
+          name: pageSize
+          required: false
+          description: page size
+          schema:
+            type: int
+        - in: query
+          name: sortBy
+          required: false
+          description: sorting by
+          schema:
+            type: string
+        - in: query
+          name: sortOrder
+          required: false
+          description: sort order (asc/desc)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              type: object
+              example:
+                status: 200
+                errCode: '0'
+                errMsg: Success
+                postList:
+                  - id: 1
+                    title: title 1
+                    content: Lorem ipusm...
+                    categoryName: travel
+                    userName: Beomgu Jeon
+                    visitCount: 10
+                    createDate: '2024-07-28 13:12:33'
+                  - id: 2
+                    title: title 2
+                    content: Lorem ipusm...
+                    categoryName: travel
+                    userName: Beomgu Jeon
+                    visitCount: 5
+                    createDate: '2024-07-29 15:52:13'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: POST006
+                errMsg: Failed to retrieve posts.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: POST007
+                errMsg: Failed to retrieve posts.
+  '/api/posts/{postId}':
+    get:
+      tags:
+        - Post
+      summary: View selected post and increase the visit count
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          description: post id
+          schema:
+            type: int
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              type: object
+              example:
+                status: 200
+                errCode: '0'
+                errMsg: Success
+                id: '1'
+                title: title 1
+                content: Lorem ipusm fdasf
+                categoryName: travel
+                userName: Beomgu Jeon
+                visitCount: 10
+                createDate: '2024-07-28 13:12:33'
+                updateDate: '2024-07-28 13:12:33'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: POST008
+                errMsg: Failed to retrieve the post.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: POST009
+                errMsg: Failed to retrieve the post.
+    put:
+      tags:
+        - Post
+      summary: Update the post
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          description: post id
+          schema:
+            type: int
+      consumes:
+        - application/json
+      requestBody:
+        x-name: body
+        required: true
+        content:
+          application/json:
+            type: object
+            example:
+              title: This is updated title
+              content: content is updated~~~
+              categoryId: 1
+              fileList:
+                - fieldname: myFiles1
+                  originalname: 1.png
+                  encoding: 7bit
+                  mimetype: image/png
+                  destination: /Users/x/Documents/dev/node_playground/test/files
+                  filename: fea8f281-f412-43b3-b349-b865d10ca634.png
+                  path: /Users/x/Documents/dev/node_playground/test/files/fea8f281-f412-43b3-b349-b865d10ca634.png
+                  size: 74107
+      responses:
+        '302':
+          $ref: '#/components/responses/RedirectResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: POST008
+                errMsg: Failed to retrieve the post.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: POST009
+                errMsg: Failed to retrieve the post.
+    delete:
+      tags:
+        - Post
+      summary: Delete the post
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          description: post id
+          schema:
+            type: int
+      responses:
+        '302':
+          $ref: '#/components/responses/RedirectResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: POST012
+                errMsg: Failed to delete the post.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              type: object
+              example:
+                status: 404
+                errCode: POST013
+                errMsg: The post does not exist.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: POST011
+                errMsg: Failed to delete the post.
+  '/api/comments/{postId}':
+    post:
+      tags:
+        - Comment
+      summary: Create a comment
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          description: post id
+          schema:
+            type: int
+      consumes:
+        - application/json
+      requestBody:
+        x-name: body
+        required: true
+        content:
+          application/json:
+            type: object
+            example:
+              parentId: 2
+              content: contents~~~
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: COM001
+                errMsg: Failed to create comment.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              type: object
+              examples:
+                InvalidData:
+                  value:
+                    status: 412
+                    errCode: COM002
+                    errMsg: The data format is invalid.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: COM003
+                errMsg: Failed to create comment.
+    get:
+      tags:
+        - Comment
+      summary: Retrieve comment list by post id
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          description: post id
+          schema:
+            type: int
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              type: object
+              example:
+                status: 200
+                errCode: '0'
+                errMsg: Success
+                commentList:
+                  - id: 1
+                    content: Lorem ipusm...
+                    userName: Beomgu Jeon
+                    updateDate: '2024-07-28 13:12:33'
+                  - id: 2
+                    parentId: 1
+                    content: Lorem ipusm...
+                    userName: Beomgu Jeon
+                    updateDate: '2024-07-29 15:52:13'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: COM004
+                errMsg: Failed to retrieve comments.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: COM005
+                errMsg: Failed to retrieve comments.
+  '/api/comments/{commentId}':
+    put:
+      tags:
+        - Comment
+      summary: Update the comment
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          description: comment id
+          schema:
+            type: int
+      requestBody:
+        x-name: body
+        required: true
+        content:
+          application/json:
+            type: object
+            example:
+              content: content is updated~~~
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: COM006
+                errMsg: Failed to update the comment.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              type: object
+              example:
+                status: 404
+                errCode: COM007
+                errMsg: The comment does not exist.
+        '412':
+          description: Precondition Failed
+          content:
+            application/json:
+              type: object
+              example:
+                status: 412
+                errCode: COM008
+                errMsg: The data format is invalid.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: COM009
+                errMsg: Failed to update the comment.
+    delete:
+      tags:
+        - Comment
+      summary: Delete the comment
+      parameters:
+        - in: path
+          name: commentId
+          required: true
+          description: comment id
+          schema:
+            type: int
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: COM010
+                errMsg: Failed to delete the comment.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              type: object
+              example:
+                status: 404
+                errCode: COM011
+                errMsg: The comment does not exist.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: COM012
+                errMsg: Failed to delete the comment.
+  /api/likes:
+    get:
+      tags:
+        - Like
+      summary: Retrieve posts user liked
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              type: object
+              example:
+                status: 200
+                errCode: '0'
+                errMsg: Success
+                likedPostList:
+                  - id: 1
+                    title: title 1
+                    content: Lorem ipusm...
+                    categoryName: travel
+                    userName: Beomgu Jeon
+                    visitCount: 10
+                    createDate: '2024-07-28 13:12:33'
+                  - id: 2
+                    title: title 2
+                    content: Lorem ipusm...
+                    categoryName: travel
+                    userName: Beomgu Jeon
+                    visitCount: 5
+                    createDate: '2024-07-29 15:52:13'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: LIKE001
+                errMsg: Failed to retrieve liked posts.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: LIKE002
+                errMsg: Failed to retrieve liked posts.
+  '/api/likes/{id}':
+    post:
+      tags:
+        - Like
+      summary: Like the post or comment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: post or comment id
+          schema:
+            type: int
+        - in: query
+          name: type
+          required: true
+          description: post or comment
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              type: object
+              example:
+                status: 400
+                errCode: LIKE003
+                errMsg: Failed to like the post or comment.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              type: object
+              example:
+                status: 404
+                errCode: LIKE004
+                errMsg: The post or comment does not exist.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              type: object
+              example:
+                status: 500
+                errCode: LIKE005
+                errMsg: Failed to like the post or comment.

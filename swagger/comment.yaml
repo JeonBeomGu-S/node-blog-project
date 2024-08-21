@@ -1,0 +1,229 @@
+/api/comments/{postId}:
+  post:
+    tags:
+      - Comment
+    summary: Create a comment
+    parameters:
+      - in: path
+        name: postId
+        required: true
+        description: post id
+        schema:
+          type: int
+    consumes: 
+      - application/json
+    requestBody:
+      x-name: body
+      required: true
+      content:
+        application/json:
+          type: object
+          example: {
+            "parentId": 2,
+            "content": "contents~~~",
+          }
+    responses:
+      '200':
+        $ref: './openapi.yaml#/components/responses/SuccessResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "COM001",
+              "errMsg": "Failed to create comment."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '412': 
+        description: Precondition Failed
+        content:
+          application/json:
+            type: object
+            examples: 
+              InvalidData: 
+                value: {
+                  "status": 412,
+                  "errCode": "COM002",
+                  "errMsg": "The data format is invalid."
+                }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "COM003",
+              "errMsg": "Failed to create comment."
+            }
+  get:
+    tags:
+      - Comment
+    summary: Retrieve comment list by post id
+    parameters:
+      - in: path
+        name: postId
+        required: true
+        description: post id
+        schema:
+          type: int
+    responses:
+      '200':
+        description: Success
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 200,
+              "errCode": "0",
+              "errMsg": "Success",
+              "commentList":[{
+                "id": 1,
+                "content":"Lorem ipusm...", 
+                "userName": "Beomgu Jeon",
+                "updateDate": "2024-07-28 13:12:33"
+              }, {
+                "id":2,
+                "parentId": 1,
+                "content": "Lorem ipusm...", 
+                "userName": "Beomgu Jeon",
+                "updateDate": "2024-07-29 15:52:13"
+              }]
+            }
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "COM004",
+              "errMsg": "Failed to retrieve comments."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "COM005",
+              "errMsg": "Failed to retrieve comments."
+            }
+/api/comments/{commentId}:
+  put:
+    tags:
+      - Comment
+    summary: Update the comment
+    parameters:
+      - in: path
+        name: commentId
+        required: true
+        description: comment id
+        schema:
+          type: int
+    requestBody:
+      x-name: body
+      required: true
+      content:
+        application/json:
+          type: object
+          example: {
+            "content": "content is updated~~~"
+          }
+    responses:
+      '200':
+        $ref: './openapi.yaml#/components/responses/SuccessResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "COM006",
+              "errMsg": "Failed to update the comment."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 404,
+              "errCode": "COM007",
+              "errMsg": "The comment does not exist."
+            }
+      '412':
+        description: Precondition Failed
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 412,
+              "errCode": "COM008",
+              "errMsg": "The data format is invalid."
+            }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "COM009",
+              "errMsg": "Failed to update the comment."
+            }
+  delete:
+    tags:
+      - Comment
+    summary: Delete the comment
+    parameters:
+      - in: path
+        name: commentId
+        required: true
+        description: comment id
+        schema:
+          type: int
+    responses:
+      '200':
+        $ref: './openapi.yaml#/components/responses/SuccessResponse'
+      '400':
+        description: Bad Request
+        content:
+          application/json: 
+            type: object
+            example: {
+              "status": 400,
+              "errCode": "COM010",
+              "errMsg": "Failed to delete the comment."
+            }
+      '401': 
+        $ref: './openapi.yaml#/components/responses/Unauthorized'
+      '404':
+        description: Not Found
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 404,
+              "errCode": "COM011",
+              "errMsg": "The comment does not exist."
+            }
+      '500':
+        description: Internal Server Error
+        content:
+          application/json:
+            type: object
+            example: {
+              "status": 500,
+              "errCode": "COM012",
+              "errMsg": "Failed to delete the comment."
+            }
