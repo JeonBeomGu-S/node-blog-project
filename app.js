@@ -11,9 +11,17 @@ const port = 3000;
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// ejs
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+// css
+app.use(express.static(path.join(path.dirname(require.main.filename), 'public')));
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.render('index', {
+
+    });
 });
 
 app.listen(port, () => {

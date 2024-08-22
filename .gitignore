@@ -131,3 +131,6 @@ dist
 
 # vscode
 .vscode/
+
+# tailwind output css
+public/css/style.css
