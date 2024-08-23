@@ -100,5 +100,5 @@ exports.postLogin = async (req, res, next) => {
   res.cookie('token', token);
   console.log(token);
 
-  return res.redirect('login');
+  return res.redirect('/');
 };
