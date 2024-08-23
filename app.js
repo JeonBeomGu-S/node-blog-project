@@ -1,6 +1,7 @@
 const express = require('express');
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const userRouter = require('./routes/userRouter');
 
@@ -13,10 +14,11 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // ejs
 app.set('view engine', 'ejs');

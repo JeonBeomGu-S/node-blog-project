@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs');
 const User = require('../model/user');
 const Utils = require('../util/utils');
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
 
 exports.getSignup = (req, res, next) => {
   res.render('signup', {
@@ -53,9 +57,48 @@ exports.postSignup = async (req, res, next) => {
 };
 
 exports.getLogin = (req, res, next) => {
-  res.render('', {});
+  res.render('login', {
+    pageTitle: 'login',
+  });
 };
 
-exports.postLogin = (req, res, next) => {
-  res.render('', {});
+exports.postLogin = async (req, res, next) => {
+  const key = process.env.JWT_SECRET_KEY;
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!email || !password) {
+    const err = Utils.createError(400, 'LOGIN001');
+    return res.status(400).json(err);
+  }
+
+  const user = await User.findOne({ where: { email: email } });
+  if (!user) {
+    const err = Utils.createError(412, 'LOGIN002');
+    return res.status(412).json(err);
+  }
+
+  const ret = await bcrypt.compare(password, user.password);
+  if (!ret) {
+    const err = Utils.createError(412, 'LOGIN002');
+    return res.status(412).json(err);
+  }
+
+  let token = '';
+
+  token = jwt.sign(
+    {
+      type: 'jwt',
+      email: email,
+    },
+    key,
+    {
+      expiresIn: '1h',
+    }
+  );
+
+  res.cookie('token', token);
+  console.log(token);
+
+  return res.redirect('login');
 };

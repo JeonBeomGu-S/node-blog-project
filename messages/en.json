@@ -1,7 +1,13 @@
 {
-    "SIGNUP001": "Data format is invalid. Please check the data.",
-    "SIGNUP002": "Email is duplicated. Please use another email address.",
-    "SIGNUP003": "Password confirm is not matched.",
-    "SIGNUP004": "Email format is not matched.",
-    "SIGNUP005": "Password format is not matched."
+  "SIGNUP001": "Data format is invalid. Please check the data.",
+  "SIGNUP002": "Email is duplicated. Please use another email address.",
+  "SIGNUP003": "Password confirm is not matched.",
+  "SIGNUP004": "Email format is not matched.",
+  "SIGNUP005": "Password format is not matched.",
+
+  "LOGIN001": "Login is failed.",
+  "LOGIN002": "Please check id and password.",
+  "LOGIN003": "Login is failed.",
+  "AUTH001": "The token is invalid",
+  "AUTH002": "The token is expired."
 }
