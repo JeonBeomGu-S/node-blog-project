@@ -19,12 +19,12 @@ exports.postSignup = async (req, res, next) => {
     return res.status(400).json(err);
   }
 
-  if (Utils.validateEmail(email)) {
+  if (!Utils.validateEmail(email)) {
     const err = Utils.createError(412, 'SIGNUP004');
     return res.status(412).json(err);
   }
 
-  if (Utils.validatePassword(password)) {
+  if (!Utils.validatePassword(password)) {
     const err = Utils.createError(412, 'SIGNUP005');
     return res.status(412).json(err);
   }
