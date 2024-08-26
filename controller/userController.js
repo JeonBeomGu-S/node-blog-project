@@ -12,11 +12,8 @@ exports.getSignup = (req, res, next) => {
   });
 };
 
-exports.postSignup = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const passwordConfirm = req.body.passwordConfirm;
-  const name = req.body.name;
+exports.createUser = async (req, res, next) => {
+  const { email, password, passwordConfirm, name } = req.body;
 
   if (!email || !password || !passwordConfirm || !name) {
     const err = Utils.createError(400, 'SIGNUP001');
@@ -62,10 +59,9 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
-exports.postLogin = async (req, res, next) => {
+exports.loginUser = async (req, res, next) => {
   const key = process.env.JWT_SECRET_KEY;
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     const err = Utils.createError(400, 'LOGIN001');
@@ -90,6 +86,7 @@ exports.postLogin = async (req, res, next) => {
     {
       type: 'jwt',
       email: email,
+      user_id: user.id,
     },
     key,
     {
