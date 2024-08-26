@@ -86,7 +86,7 @@ exports.loginUser = async (req, res, next) => {
     {
       type: 'jwt',
       email: email,
-      user_id: user.id,
+      userId: user.id,
     },
     key,
     {
