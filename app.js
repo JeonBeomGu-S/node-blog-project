@@ -34,6 +34,7 @@ app.get('/', (req, res) => {
 
     });
 });
+app.use(userRouter);
 
 app.listen(port, () => {
     console.log(`Blog project listening on port ${port}`);
