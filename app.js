@@ -4,10 +4,12 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const userRouter = require('./routes/userRouter');
+const postRouter = require('./routes/postRouter');
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const path = require('path');
+const defineAssociations = require('./model/association');
 const swaggerSpec = YAML.load(path.join(__dirname, '/build/swagger.yaml'));
 
 const app = express();
@@ -27,15 +29,12 @@ app.set('views', 'views');
 // css
 app.use(express.static(path.join(path.dirname(require.main.filename), 'public')));
 
-app.use(userRouter);
+// sequelize define associations
+defineAssociations();
 
-app.get('/', (req, res) => {
-    res.render('index', {
-
-    });
-});
 app.use(userRouter);
+app.use(postRouter);
 
 app.listen(port, () => {
-    console.log(`Blog project listening on port ${port}`);
+  console.log(`Blog project listening on port ${port}`);
 });

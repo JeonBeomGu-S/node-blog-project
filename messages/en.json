@@ -4,10 +4,22 @@
   "SIGNUP003": "Password confirm is not matched.",
   "SIGNUP004": "Email format is not matched.",
   "SIGNUP005": "Password format is not matched.",
-
   "LOGIN001": "Login is failed.",
   "LOGIN002": "Please check id and password.",
   "LOGIN003": "Login is failed.",
   "AUTH001": "The token is invalid",
-  "AUTH002": "The token is expired."
+  "AUTH002": "The token is expired.",
+  "POST001": "Failed to create a post.",
+  "POST002": "The data format is invalid.",
+  "POST003": "The title format is not mathced.",
+  "POST004": "The content format is not matched.",
+  "POST005": "Failed to create a post.",
+  "POST006": "Failed to retrieve posts.",
+  "POST007": "Failed to retrieve posts.",
+  "POST008": "Failed to retrieve the post.",
+  "POST009": "Failed to retrieve the post.",
+  "POST010": "Failed to update the post.",
+  "POST011": "Failed to update the post.",
+  "POST012": "Failed to delete the post.",
+  "POST013": "Failed to delete the post."
 }

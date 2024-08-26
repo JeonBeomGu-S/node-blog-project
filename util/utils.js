@@ -18,6 +18,15 @@ exports.createError = (status, errCode) => {
   return error;
 };
 
+exports.createSuccess = () => {
+  const success = new Object();
+  success.status = 200;
+  success.errCode = '0';
+  success.errMsg = 'Success';
+
+  return success;
+};
+
 exports.validateEmail = email => {
   return email.match(
     /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/
@@ -26,4 +35,8 @@ exports.validateEmail = email => {
 
 exports.validatePassword = password => {
   return password.match(/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/);
+};
+
+exports.isPositiveNumber = number => {
+  return typeof number === 'number' && number > 0;
 };
