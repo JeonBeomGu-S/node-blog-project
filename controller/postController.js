@@ -9,7 +9,7 @@ exports.getIndex = async (req, res, next) => {
   });
 };
 
-exports.createPost = (req, res, next) => {
+exports.createPost = async (req, res, next) => {
   const { title, content, categoryId } = req.body;
 
   if (!title) {
@@ -23,7 +23,7 @@ exports.createPost = (req, res, next) => {
   }
 
   try {
-    Post.create({
+    await Post.create({
       title: title,
       content: content,
       categoryId: categoryId,
@@ -140,7 +140,7 @@ exports.updatePost = async (req, res, next) => {
   return res.status(200).json(Utils.createSuccess());
 };
 
-exports.deletePost = (req, res, next) => {
+exports.deletePost = async (req, res, next) => {
   const postId = parseInt(req.params.postId);
 
   if (!Utils.isPositiveNumber(postId)) {
@@ -149,7 +149,7 @@ exports.deletePost = (req, res, next) => {
   }
 
   try {
-    Post.destroy({
+    await Post.destroy({
       where: {
         id: postId,
         userId: req.decoded.userId,
