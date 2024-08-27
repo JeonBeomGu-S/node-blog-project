@@ -21,5 +21,17 @@
   "POST010": "Failed to update the post.",
   "POST011": "Failed to update the post.",
   "POST012": "Failed to delete the post.",
-  "POST013": "Failed to delete the post."
+  "POST013": "Failed to delete the post.",
+  "COM001": "Failed to create a comment.",
+  "COM002": "The data format is invalid.",
+  "COM003": "Failed to create comment.",
+  "COM004": "Failed to retrieve comments.",
+  "COM005": "Failed to retrieve comments.",
+  "COM006": "Failed to update the comment.",
+  "COM007": "The comment does not exist.",
+  "COM008": "The data format is invalid.",
+  "COM009": "Failed to update the comment.",
+  "COM010": "Failed to delete the comment.",
+  "COM011": "The comment does not exist.",
+  "COM012": "Failed to update the comment."
 }
