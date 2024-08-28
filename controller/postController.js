@@ -112,7 +112,7 @@ exports.getPost = async (req, res, next) => {
     return res.status(400).json(err);
   }
 
-  const post = await Post.findOne({
+  const postData = await Post.findOne({
     include: [
       {
         model: Category,
@@ -132,18 +132,22 @@ exports.getPost = async (req, res, next) => {
 
   await Post.update(
     {
-      visitCount: post.visitCount + 1,
+      visitCount: postData.visitCount + 1,
     },
     {
       where: {
-        id: post.id,
+        id: postData.id,
       },
     }
   );
 
-  return res.status(200).json({
+  const post = postData.get({ plain: true });
+  post.createDate = post.createDate.toLocaleString('en-US', { timeZone: 'America/Toronto' });
+
+  return res.status(200).render('post', {
     ...Utils.createSuccess(),
-    ...post.get({ plain: true }),
+    ...post,
+    pageTitle: post.title,
   });
 };
 
