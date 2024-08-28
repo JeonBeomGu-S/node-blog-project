@@ -4,8 +4,46 @@ const Utils = require('../util/utils');
 const User = require('../model/user');
 
 exports.getIndex = async (req, res, next) => {
-  return res.render('index', {
-    pageTitle: 'home',
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const sortBy = req.query.sortBy || 'create_date';
+  const sortOrder = req.query.sortOrder || 'desc';
+
+  if (!Utils.isPositiveNumber(page) || !Utils.isPositiveNumber(pageSize)) {
+    const err = Utils.createError(400, 'POST006');
+    return res.status(400).json(err);
+  }
+
+  const postList = await Post.findAll({
+    include: [
+      {
+        model: Category,
+        attributes: ['name'],
+        required: true,
+      },
+      {
+        model: User,
+        attributes: ['name'],
+        required: true,
+      },
+    ],
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+    order: [[sortBy, sortOrder]],
+  });
+
+  postList.forEach((post, index, array) => {
+    array[index] = post.get({ plain: true });
+    array[index].createDate = post.createDate.toLocaleString('en-US', {
+      timeZone: 'America/Toronto',
+    });
+  });
+
+  return res.status(200).render('index', {
+    ...Utils.createSuccess(),
+    pageTitle: 'Story Hub',
+    postList: postList,
+    page: page,
   });
 };
 

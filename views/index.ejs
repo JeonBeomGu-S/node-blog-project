@@ -1,7 +1,93 @@
 <%- include('./includes/head.ejs') %>
 </head>
-<body>
-  <h1 class="text-4xl font-bold underline">
-    Index Page
-  </h1>
-  <%- include('./includes/end.ejs') %>
+  <body class="bg-white font-family-karla">
+    <!-- nav and title -->
+    <%- include('./includes/topNav.ejs') %>
+    <%- include('./includes/textHeader.ejs') %>
+    <%- include('./includes/topicNav.ejs') %>
+    <div class="container mx-auto flex flex-wrap py-6">
+      <!-- Posts Section -->
+      <section class="w-full md:w-2/3 flex flex-col items-center px-3">
+        <% for (let post of postList) { %>
+          <article class="flex flex-col shadow my-4 w-full">
+            <!-- Article Image -->
+            <!-- <a href="/api/posts/<%= post.id %>" class="hover:opacity-75">
+              <img src="https://source.unsplash.com/collection/1346951/1000x500?sig=1" />
+            </a> -->
+            <div class="bg-white flex flex-col justify-start p-6">
+              <a href="/api/posts/<%= post.id %>" class="text-blue-700 text-sm font-bold uppercase pb-4"><%= post.category.name %></a>
+              <a href="/api/posts/<%= post.id %>" class="text-3xl font-bold hover:text-gray-700 pb-4"
+                ><%= post.title %></a
+              >
+              <p href="/api/posts/<%= post.id %>" class="text-sm pb-3">
+                By <a href="/api/posts/<%= post.id %>" class="font-semibold hover:text-gray-800"><%= post.user.name %></a>, Published on
+                <%= post.createDate %>
+              </p>
+              <p class="text-sm pb-3"><%= post.visitCount %> views</p>
+              <a href="/api/posts/<%= post.id %>" class="pb-6"
+                ><%= post.content %></a
+              >
+              <a href="/api/posts/<%= post.id %>" class="uppercase text-gray-800 hover:text-black"
+                >Continue Reading <i class="fas fa-arrow-right"></i
+              ></a>
+            </div>
+          </article>
+        <% } %>
+
+        <!-- Pagination -->
+        <div class="flex items-center py-8">
+          <a
+            href="#"
+            class="
+              h-10
+              w-10
+              bg-blue-800
+              hover:bg-blue-600
+              font-semibold
+              text-white text-sm
+              flex
+              items-center
+              justify-center
+            "
+            >1</a
+          >
+          <a
+            href="#"
+            class="
+              h-10
+              w-10
+              font-semibold
+              text-gray-800
+              hover:bg-blue-600
+              hover:text-white
+              text-sm
+              flex
+              items-center
+              justify-center
+            "
+            >2</a
+          >
+          <a
+            href="#"
+            class="
+              h-10
+              w-10
+              font-semibold
+              text-gray-800
+              hover:text-gray-900
+              text-sm
+              flex
+              items-center
+              justify-center
+              ml-3
+            "
+            >Next <i class="fas fa-arrow-right ml-2"></i
+          ></a>
+        </div>
+      </section>
+      <%- include('./includes/sideBar.ejs') %>
+    </div>
+
+    <%- include('./includes/footer.ejs') %>
+  </body>
+</html>
