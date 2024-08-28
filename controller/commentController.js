@@ -8,7 +8,7 @@ exports.createComment = async (req, res, next) => {
   const { parentId, content } = req.body;
 
   if (!content) {
-    const err = Utils.createError(400, 'COM0001');
+    const err = Utils.createError(400, 'COM001');
     return res.status(400).json(err);
   }
 
