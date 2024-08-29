@@ -1,6 +1,9 @@
 const i18n = require('i18n');
 const path = require('path');
 const root = path.dirname(require.main.filename);
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 i18n.configure({
   locales: ['en'],
@@ -39,4 +42,10 @@ exports.validatePassword = password => {
 
 exports.isPositiveNumber = number => {
   return typeof number === 'number' && number > 0;
+};
+
+exports.getFormattedDateString = date => {
+  return date.toLocaleString(process.env.SERVER_LANG, {
+    timeZone: process.env.TIMEZONE,
+  });
 };

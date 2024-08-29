@@ -34,9 +34,7 @@ exports.getIndex = async (req, res, next) => {
 
   postList.forEach((post, index, array) => {
     array[index] = post.get({ plain: true });
-    array[index].createDate = post.createDate.toLocaleString('en-US', {
-      timeZone: 'America/Toronto',
-    });
+    array[index].createDate = Utils.getFormattedDateString(array[index].createDate);
   });
 
   return res.status(200).render('index', {
@@ -142,7 +140,7 @@ exports.getPost = async (req, res, next) => {
   );
 
   const post = postData.get({ plain: true });
-  post.createDate = post.createDate.toLocaleString('en-US', { timeZone: 'America/Toronto' });
+  post.createDate = Utils.getFormattedDateString(post.createDate);
 
   return res.status(200).render('post', {
     ...Utils.createSuccess(),
