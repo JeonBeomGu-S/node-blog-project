@@ -8,7 +8,7 @@ dotenv.config();
 
 exports.getSignup = (req, res, next) => {
   res.render('signup', {
-    pageTitle: 'Sign up',
+    pageTitle: 'Sign Up',
   });
 };
 
@@ -55,7 +55,7 @@ exports.createUser = async (req, res, next) => {
 
 exports.getLogin = (req, res, next) => {
   res.render('login', {
-    pageTitle: 'login',
+    pageTitle: 'Login',
   });
 };
 
