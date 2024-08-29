@@ -7,6 +7,7 @@ const userRouter = require('./routes/userRouter');
 const postRouter = require('./routes/postRouter');
 const commentRouter = require('./routes/commentRouter');
 const likeRouter = require('./routes/likeRouter');
+const commonRouter = require('./routes/commonRouter');
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -38,6 +39,7 @@ app.use(userRouter);
 app.use(postRouter);
 app.use(commentRouter);
 app.use(likeRouter);
+app.use(commonRouter);
 
 app.listen(port, () => {
   console.log(`Blog project listening on port ${port}`);
