@@ -19,7 +19,7 @@ const Like = sequelize.define('like', {
     },
     commentId: {
         type: Sequelize.INTEGER,
-        field: 'parent_id',
+        field: 'comment_id',
         references: {
             model: 'comment',
             key: 'id'
