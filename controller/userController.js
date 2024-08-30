@@ -99,3 +99,8 @@ exports.loginUser = async (req, res, next) => {
 
   return res.redirect('/');
 };
+
+exports.logoutUser = (req, res, next) => {
+  res.clearCookie('token');
+  return res.status(302).redirect('/');
+};

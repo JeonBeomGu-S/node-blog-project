@@ -35,6 +35,12 @@ app.use(express.static(path.join(path.dirname(require.main.filename), 'public'))
 // sequelize define associations
 defineAssociations();
 
+app.use((req, res, next) => {
+  res.locals.token = req.cookies.token;
+  console.log(res.locals.token);
+  next();
+});
+
 app.use(userRouter);
 app.use(postRouter);
 app.use(commentRouter);

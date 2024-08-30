@@ -8,7 +8,7 @@
           items-center
           justify-between
           font-bold
-          text-sm text-white
+          text-base text-white
           uppercase
           no-underline
         "
@@ -18,9 +18,30 @@
       </ul>
     </nav>
 
-    <div class="flex items-center text-lg no-underline text-white pr-6">
-      <a class="" href="/api/signup">Sign Up</a>
-      <a class="pl-6" href="/api/login">Login</a>
+    <div
+      class="
+        flex
+        items-center
+        justify-between
+        font-bold
+        text-base text-white
+        uppercase
+        no-underline
+      "
+    >
+      <a class="hover:text-gray-200 hover:underline px-4" href="/api/signup">Sign Up</a>
+      <% if (!token) { %>
+      <a class="hover:text-gray-200 hover:underline px-4" href="/api/login"> Login </a>
+      <% } else { %>
+      <a
+        class="hover:text-gray-200 hover:underline px-4"
+        href="javascript:void(0);"
+        onclick="javascript:logout.submit();"
+      >
+        Logout
+      </a>
+      <form class="hidden" action="/api/logout" method="POST" name="logout"></form>
+      <% } %>
     </div>
   </div>
 </nav>
