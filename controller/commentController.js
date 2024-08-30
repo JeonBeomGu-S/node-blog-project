@@ -1,6 +1,9 @@
+const { QueryTypes } = require('sequelize');
 const Comment = require('../model/comment');
 const Post = require('../model/post');
 const User = require('../model/user');
+
+const sequelize = require('../util/db');
 
 const Utils = require('../util/utils');
 
@@ -38,29 +41,42 @@ exports.getCommentList = async (req, res, next) => {
     return res.status(400).json(err);
   }
 
-  const comments = await Comment.findAll({
-    include: [
-      {
-        model: User,
-        attributes: ['name'],
-        required: true,
-      },
-    ],
-    where: {
-      postId: postId,
-    },
-    order: [['createDate', 'asc']],
-  });
+  const commentList = await sequelize.query(
+    `with recursive commentTree (id, content, post_id, user_id, user_name, parent_id, create_date, update_date, level, path, cycle) as (
+    select c.id, c.content, c.post_id, c.user_id, u.name, c.parent_id, c.create_date, c.update_date, 0, array[c.id], false
+    from comment c
+    join public.user u
+    on c.user_id = u.id
+    where c.parent_id is null and c.post_id = ${postId}
 
-  const commentList = [];
+    union all
 
-  comments.forEach(comment => {
-    commentList.push(comment.get({ plain: true }));
+    select c.id, c.content, c.post_id, c.user_id, u.name, c.parent_id, c.create_date, c.update_date, level + 1, path || c.id, c.id = any(path)
+    from comment c
+    join public.user u
+    on c.user_id = u.id
+    join commentTree cte
+    on c.parent_id = cte.id and c.post_id = ${postId} and not cycle
+    )
+    select id          as "id",
+          content     as "content",
+          post_id     as "postId",
+          user_id     as "userId",
+          parent_id   as "parentId",
+          create_date as "createDate",
+          user_name   as "userName"
+    from commenttree
+    order by path;`,
+    { plain: false, type: QueryTypes.SELECT }
+  );
+
+  commentList.forEach((comment, index, array) => {
+    array[index].createDate = Utils.getFormattedDateString(array[index].createDate);
   });
 
   return res.status(200).json({
     ...Utils.createSuccess(),
-    commentList: comments,
+    commentList: commentList,
   });
 };
 

@@ -2,6 +2,7 @@ const Post = require('../model/post');
 const Category = require('../model/category');
 const Utils = require('../util/utils');
 const User = require('../model/user');
+const axios = require('axios');
 
 exports.getIndex = async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
@@ -142,9 +143,12 @@ exports.getPost = async (req, res, next) => {
   const post = postData.get({ plain: true });
   post.createDate = Utils.getFormattedDateString(post.createDate);
 
+  const commentResponse = await axios.get(`http://localhost:3000/api/comments/${postId}`);
+
   return res.status(200).render('post', {
     ...Utils.createSuccess(),
     ...post,
+    commentList: commentResponse.data.commentList,
     pageTitle: post.title,
   });
 };
