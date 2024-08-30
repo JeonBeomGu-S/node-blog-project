@@ -79,6 +79,7 @@ exports.getPostList = async (req, res, next) => {
   const pageSize = parseInt(req.query.pageSize) || 10;
   const sortBy = req.query.sortBy || 'create_date';
   const sortOrder = req.query.sortOrder || 'desc';
+  const categoryId = parseInt(req.query.categoryId);
 
   if (!Utils.isPositiveNumber(page) || !Utils.isPositiveNumber(pageSize)) {
     const err = Utils.createError(400, 'POST006');
@@ -86,20 +87,36 @@ exports.getPostList = async (req, res, next) => {
   }
 
   const postList = await Post.findAll({
+    include: [
+      {
+        model: Category,
+        attributes: ['name'],
+        required: true,
+      },
+      {
+        model: User,
+        attributes: ['name'],
+        required: true,
+      },
+    ],
     limit: pageSize,
     offset: (page - 1) * pageSize,
     order: [[sortBy, sortOrder]],
+    where: {
+      ...(Utils.isPositiveNumber(categoryId) && { categoryId: categoryId }),
+    },
   });
 
-  postList.forEach(post => {
-    post = post.get({ plain: true });
+  postList.forEach((post, index, array) => {
+    array[index] = post.get({ plain: true });
+    array[index].createDate = Utils.getFormattedDateString(array[index].createDate);
   });
 
-  return res.status(200).json({
-    status: 200,
-    errCode: '0',
-    errMsg: 'Success',
+  return res.status(200).render('index', {
+    ...Utils.createSuccess(),
+    pageTitle: 'Story Hub',
     postList: postList,
+    page: page,
   });
 };
 

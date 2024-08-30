@@ -37,12 +37,13 @@
         py-2
       "
     >
-      <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Technology</a>
-      <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Automotive</a>
-      <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Finance</a>
-      <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Politics</a>
-      <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Culture</a>
-      <a href="#" class="hover:bg-gray-400 rounded py-2 px-4 mx-2">Sports</a>
+      <% for (let category of categoryList) { %>
+      <a
+        href="/api/posts?categoryId=<%= category.id %>"
+        class="hover:bg-gray-400 rounded py-2 px-4 mx-2"
+        ><%= category.name %></a
+      >
+      <% } %>
     </div>
   </div>
 </nav>

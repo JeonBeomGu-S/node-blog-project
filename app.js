@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
+const Category = require('./model/category');
+
 const userRouter = require('./routes/userRouter');
 const postRouter = require('./routes/postRouter');
 const commentRouter = require('./routes/commentRouter');
@@ -35,9 +37,9 @@ app.use(express.static(path.join(path.dirname(require.main.filename), 'public'))
 // sequelize define associations
 defineAssociations();
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.token = req.cookies.token;
-  console.log(res.locals.token);
+  res.locals.categoryList = await Category.findAll();
   next();
 });
 
