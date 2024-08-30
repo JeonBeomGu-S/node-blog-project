@@ -6,7 +6,7 @@ dotenv.config();
 
 module.exports = (req, res, next) => {
   try {
-    req.decoded = jwt.verify(req.headers.authorization, process.env.JWT_SECRET_KEY);
+    req.decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET_KEY);
     return next();
   } catch (err) {
     res.clearCookie('token');
