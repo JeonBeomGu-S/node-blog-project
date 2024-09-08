@@ -190,28 +190,19 @@
                       </li>
                       <li>
                         <a
-                          href="#"
+                          href="javascript:void(0);"
+                          onclick="document.forms['deleteComment<%= comment.id %>'].submit();"
                           class="
                             block
                             py-2
                             px-4
                             hover:bg-gray-100
                           "
-                          >Remove</a
+                          >Delete</a
                         >
                       </li>
-                      <li>
-                        <a
-                          href="#"
-                          class="
-                            block
-                            py-2
-                            px-4
-                            hover:bg-gray-100
-                          "
-                          >Report</a
-                        >
-                      </li>
+                      <form class="hidden" action="/api/comments/<%= comment.id %>?_method=DELETE" method="POST" name="deleteComment<%= comment.id %>">
+                      </form>
                     </ul>
                   </div>
                 </footer>

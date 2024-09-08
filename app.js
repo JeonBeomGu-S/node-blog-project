@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
+const methodOverride = require('method-override');
+
 const Category = require('./model/category');
 
 const userRouter = require('./routes/userRouter');
@@ -36,6 +38,8 @@ app.use(express.static(path.join(path.dirname(require.main.filename), 'public'))
 
 // sequelize define associations
 defineAssociations();
+
+app.use(methodOverride('_method'));
 
 app.use(async (req, res, next) => {
   res.locals.token = req.cookies.token;
