@@ -137,7 +137,7 @@ exports.getPost = async (req, res, next) => {
       },
       {
         model: User,
-        attributes: ['name'],
+        attributes: ['name', 'profileImage'],
         required: true,
       },
     ],

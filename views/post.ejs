@@ -39,7 +39,7 @@
         >
           <div class="w-full md:w-1/5 flex justify-center md:justify-start pt-2 pb-2 pr-4">
             <img
-              src="https://source.unsplash.com/collection/1346951/150x150?sig=1"
+              src="<%= user.profileImage %>"
               class="rounded-full shadow h-32 w-32"
             />
           </div>
@@ -117,19 +117,19 @@
                     >
                       <img
                         class="mr-2 w-6 h-6 rounded-full"
-                        src="https://flowbite.com/docs/images/people/profile-picture-2.jpg"
-                        alt="Michael Gough"
+                        src="<%= user.profileImage %>"
+                        alt="<%= comment.userName %>"
                       /><%= comment.userName %>
                     </p>
                     <p class="text-sm text-gray-600 ">
-                      <time pubdate datetime="2022-02-08" title="February 8th, 2022"
-                        ><%= comment.createDate %></time
-                      >
+                      <time>
+                        <%= comment.createDate %>
+                      </time>
                     </p>
                   </div>
                   <button
-                    id="dropdownComment1Button"
-                    data-dropdown-toggle="dropdownComment1"
+                    id="dropdownComment<%= comment.id %>Button"
+                    data-dropdown-toggle="dropdownComment<%= comment.id %>"
                     class="
                       inline-flex
                       items-center
@@ -161,7 +161,7 @@
                   </button>
                   <!-- Dropdown menu -->
                   <div
-                    id="dropdownComment1"
+                    id="dropdownComment<%= comment.id %>"
                     class="
                       hidden
                       z-10

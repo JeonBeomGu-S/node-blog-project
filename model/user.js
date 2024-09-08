@@ -32,8 +32,9 @@ const User = sequelize.define('user', {
         field: 'update_date',
         defaultValue: Sequelize.DataTypes.NOW,
     },
-    profile_image: {
-        type: Sequelize.STRING
+    profileImage: {
+        type: Sequelize.STRING,
+        field: 'profile_image'
     }
 }, {
     freezeTableName: true,

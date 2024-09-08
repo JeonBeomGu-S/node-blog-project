@@ -14,6 +14,7 @@ exports.getSignup = (req, res, next) => {
 
 exports.createUser = async (req, res, next) => {
   const { email, password, passwordConfirm, name } = req.body;
+  const profileImagePath = req.file.path.split('public')[1];
 
   if (!email || !password || !passwordConfirm || !name) {
     const err = Utils.createError(400, 'SIGNUP001');
@@ -48,6 +49,7 @@ exports.createUser = async (req, res, next) => {
     email: email,
     password: hashedPassword,
     name: name,
+    profileImage: profileImagePath,
   });
 
   return res.redirect('login');

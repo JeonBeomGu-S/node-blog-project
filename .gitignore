@@ -134,3 +134,7 @@ dist
 
 # tailwind output css
 public/css/style.css
+
+# public files
+public/user-profile-image
+public/post-file
