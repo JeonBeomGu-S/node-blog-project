@@ -33,7 +33,7 @@ if (process.env.DEV_MODE === 'true') {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 } else {
   const fs = require('fs');
-  const srcFile = path.join(path.dirname(require.main.filename), 'public', 'messages', 'en.json');
+  const srcFile = path.join(__dirname, 'public', 'messages', 'en.json');
   const destFile = path.join('/tmp', 'en.json');
   fs.copyFileSync(srcFile, destFile);
 }
