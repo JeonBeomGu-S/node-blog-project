@@ -23,7 +23,3 @@ exports.upload = dest => {
     limits: { fileSize: 1024 * 1024 * 10 },
   });
 };
-
-exports.getRootPath = () => {
-  return path.dirname(require.main.filename);
-};

@@ -27,14 +27,17 @@ const port = 3000;
 // Swagger
 if (process.env.DEV_MODE === 'true') {
   const YAML = require('yamljs');
-  const swaggerSpec = YAML.load(
-    path.join(path.dirname(require.main.filename), '/build/swagger.yaml')
-  );
+  const swaggerSpec = YAML.load(path.join(__dirname, '/build/swagger.yaml'));
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 } else {
   const fs = require('fs');
   const srcFile = path.join(__dirname, 'public', 'messages', 'en.json');
   const destFile = path.join('/tmp', 'en.json');
+
+  if (!fs.existsSync(destDir)) {
+    fs.mkdirSync(destDir, { recursive: true });
+  }
+
   fs.copyFileSync(srcFile, destFile);
 }
 
@@ -46,10 +49,10 @@ app.use(cookieParser());
 
 // ejs
 app.set('view engine', 'ejs');
-app.set('views', path.join(path.dirname(require.main.filename), 'views'));
+app.set('views', path.join(__dirname, 'views'));
 
 // css
-app.use(express.static(path.join(path.dirname(require.main.filename), 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // sequelize define associations
 defineAssociations();
