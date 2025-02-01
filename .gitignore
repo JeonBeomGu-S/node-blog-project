@@ -133,7 +133,7 @@ dist
 .vscode/
 
 # tailwind output css
-# public/css/style.css
+public/css/style.css
 
 # public files
 public/user-profile-image
