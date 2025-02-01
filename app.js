@@ -34,7 +34,7 @@ if (process.env.DEV_MODE === 'true') {
 } else {
   const fs = require('fs');
   const srcFile = path.join(path.dirname(require.main.filename), 'public', 'messages', 'en.json');
-  const destFile = path.join('/tmp', 'messages', 'en.json');
+  const destFile = path.join('/tmp', 'en.json');
   fs.copyFileSync(srcFile, destFile);
 }
 
