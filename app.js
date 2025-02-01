@@ -32,6 +32,7 @@ if (process.env.DEV_MODE === 'true') {
 } else {
   const fs = require('fs');
   const srcFile = path.join(__dirname, 'public', 'messages', 'en.json');
+  const destDir = path.join('/tmp', 'messages');
   const destFile = path.join('/tmp', 'en.json');
 
   if (!fs.existsSync(destDir)) {
