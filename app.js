@@ -17,20 +17,26 @@ const swaggerUi = require('swagger-ui-express');
 const path = require('path');
 const defineAssociations = require('./model/association');
 
-// Swagger
-// const YAML = require('yamljs');
-// const swaggerSpec = YAML.load(
-//   path.join(path.dirname(require.main.filename), '/build/swagger.yaml')
-// );
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const dotenv = require('dotenv');
 
-const fs = require('fs');
-const srcFile = path.join(path.dirname(require.main.filename), 'messages', 'en.json');
-const destFile = path.join('/tmp', 'messages', 'en.json');
-fs.copyFileSync(srcFile, destFile);
+dotenv.config();
 
 const app = express();
 const port = 3000;
+
+// Swagger
+if (process.env.DEV_MODE === 'true') {
+  const YAML = require('yamljs');
+  const swaggerSpec = YAML.load(
+    path.join(path.dirname(require.main.filename), '/build/swagger.yaml')
+  );
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+} else {
+  const fs = require('fs');
+  const srcFile = path.join(path.dirname(require.main.filename), 'public', 'messages', 'en.json');
+  const destFile = path.join('/tmp', 'messages', 'en.json');
+  fs.copyFileSync(srcFile, destFile);
+}
 
 app.use(express.json());
 
