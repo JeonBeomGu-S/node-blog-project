@@ -17,7 +17,9 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const path = require('path');
 const defineAssociations = require('./model/association');
-const swaggerSpec = YAML.load(path.join(__dirname, '/build/swagger.yaml'));
+const swaggerSpec = YAML.load(
+  path.join(path.dirname(require.main.filename), '/build/swagger.yaml')
+);
 
 const app = express();
 const port = 3000;
@@ -31,7 +33,7 @@ app.use(cookieParser());
 
 // ejs
 app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.set('views', path.join(path.dirname(require.main.filename), 'views'));
 
 // css
 app.use(express.static(path.join(path.dirname(require.main.filename), 'public')));
