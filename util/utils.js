@@ -7,7 +7,7 @@ dotenv.config();
 
 i18n.configure({
   locales: ['en'],
-  directory: path.join(root, 'messages'),
+  directory: path.join('/tmp', 'messages'),
   defaultLocale: 'en',
   objectNotation: true,
 });

@@ -14,18 +14,25 @@ const likeRouter = require('./routes/likeRouter');
 const commonRouter = require('./routes/commonRouter');
 
 const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
 const path = require('path');
 const defineAssociations = require('./model/association');
-const swaggerSpec = YAML.load(
-  path.join(path.dirname(require.main.filename), '/build/swagger.yaml')
-);
+
+// Swagger
+// const YAML = require('yamljs');
+// const swaggerSpec = YAML.load(
+//   path.join(path.dirname(require.main.filename), '/build/swagger.yaml')
+// );
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+const fs = require('fs');
+const srcFile = path.join(path.dirname(require.main.filename), 'messages', 'en.json');
+const destFile = path.join('/tmp', 'messages', 'en.json');
+fs.copyFileSync(srcFile, destFile);
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
